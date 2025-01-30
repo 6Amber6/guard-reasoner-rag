@@ -40,29 +40,38 @@ python ./evaluate.py
 
 ### Main Result
 
-
-
-<div align="center">
-    <img src=./assets/response.png width="70%">
-</div>
-
 <p align="center">
-Table 1: Performance of Prompt Harmfulness Detection Task.
+Table 1: Performance on Prompt Harmfulness Detection Task.
 </p>
 <div align="center">
     <img src=./assets/response.png width="70%">
 </div>
+
+
+
+
+
+
 
 <p align="center">
 Table 2: Performance of Response Harmfulness Detection Task.
 </p>
+
+<div align="center">
+    <img src=./assets/response.png width="70%">
+</div>
+
+
+<p align="center">
+Table 3: Performance on Refusal Detection Task.
+</p>
+
 <div align="center">
     <img src=./assets/refusal.png width="50%">
 </div>
 
-<p align="center">
-Table 3: Performance of Refusal Detection Task.
-</p>
+
+
 
 
 
