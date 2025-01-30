@@ -42,20 +42,23 @@ python ./evaluate.py
 
 
 
-![prompt](./assets/prompt.png)
+<div align="center">
+    <img src=./assets/response.png width="70%">
+</div>
 
 <p align="center">
 Table 1: Performance of Prompt Harmfulness Detection Task.
 </p>
-
-
-
-![response](./assets/response.png)
+<div align="center">
+    <img src=./assets/response.png width="70%">
+</div>
 
 <p align="center">
 Table 2: Performance of Response Harmfulness Detection Task.
 </p>
-<img src=./assets/refusal.png width="30%">
+<div align="center">
+    <img src=./assets/refusal.png width="50%">
+</div>
 
 <p align="center">
 Table 3: Performance of Refusal Detection Task.
