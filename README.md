@@ -3,6 +3,9 @@
 <div align="center">
 <h2><a href="">	
 GuardReasoner: Towards Reasoning-based LLM Safeguard</a></h2>
+</a></h2>
+</div>
+
 
 
 
@@ -11,6 +14,10 @@ As LLMs increasingly impact safety-critical applications, ensuring their safety 
 </p>
 
 ![overview](./assets/overview.png)
+
+
+
+
 
 
 
