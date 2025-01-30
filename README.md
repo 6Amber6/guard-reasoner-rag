@@ -55,7 +55,9 @@ Table 1: Performance of Prompt Harmfulness Detection Task.
 <p align="center">
 Table 2: Performance of Response Harmfulness Detection Task.
 </p>
-<img src="./assets/refusal.png" alt="refusal" style="zoom:25%;" />
+
+
+![refusal](./assets/refusal.png){width=40%}
 
 <p align="center">
 Table 3: Performance of Refusal Detection Task.
