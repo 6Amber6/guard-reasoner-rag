@@ -2,7 +2,7 @@
 
 <div align="center">
 <h2><a href="">	
-GuardReasoner: Towards Reasoning-based LLM Safeguard</a></h2>
+GuardReasoner: Towards Reasoning-based LLM Safeguards</a></h2>
 </a></h2>
 </div>
 
@@ -55,9 +55,7 @@ Table 1: Performance of Prompt Harmfulness Detection Task.
 <p align="center">
 Table 2: Performance of Response Harmfulness Detection Task.
 </p>
-
-
-![refusal](./assets/refusal.png){width=40%}
+<img src=./assets/refusal.png width="30%">
 
 <p align="center">
 Table 3: Performance of Refusal Detection Task.
