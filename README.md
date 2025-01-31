@@ -22,6 +22,11 @@ As LLMs increasingly impact safety-critical applications, ensuring their safety 
 
 
 
+## Update
+
+- (**2024/01/31**) The code of GuardReasoner is released.
+- (**2025/01/31**) GuardReasoner is on [arXiv](https://arxiv.org/abs/2501.18492).
+
 
 
 
@@ -82,14 +87,24 @@ Table 3: Performance on Refusal Detection Task.
 
 ### Development Version
 
-To reproduce and further develop GuardReasoner, you should run the following code.
+To reproduce the generation process of GuardReasoner, run the following code.
 
 1. Install the environment
     ```
     pip install -r requirements.txt
     ```
+2. generate via vLLM
+    ```
+    python generate.py
+    ```
+3. evaluate performance
+    ```
+    python evaluate.py
+    ```
 
+To reproduce the training process of GuardReasoner, run the following code.
 
+TODO
 
 
 
@@ -99,8 +114,14 @@ To reproduce and further develop GuardReasoner, you should run the following cod
 If you find this repository helpful, please cite our paper.
 
 ```
-
+@article{GuardReasoner,
+  title={GuardReasoner: Towards Reasoning-based LLM Safeguards},
+  author={Liu, Yue and Gao, Hongcheng and Zhai, Shengfang and Jun, Xia and Wu, Tianyi and Xue, Zhiwei and Chen, Yulin and Kawaguchi, Kenji and Zhang, Jiaheng and Hooi, Bryan},
+  journal={arXiv preprint arXiv:2501.18492},
+  year={2025}
+}
 ```
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
