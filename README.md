@@ -99,6 +99,12 @@ To reproduce the generation process of GuardReasoner, run the following code.
     python evaluate.py
     ```
 
+To use GuardReasoner, run the following code.
+```
+
+```
+
+
 To reproduce the training process of GuardReasoner, run the following code.
 
 1. TODO

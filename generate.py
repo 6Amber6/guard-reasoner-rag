@@ -5,7 +5,6 @@ from vllm import LLM, SamplingParams
 
 for model_size in ["8B", "3B", "1B"]:
 
-    model = AutoModel.from_pretrained(f"yueliu1999/GuardReasoner-{model_size}")
     vllm_model = LLM(model=f"yueliu1999/GuardReasoner-{model_size}", gpu_memory_utilization=0.95, max_num_seqs=256)
     sampling_params = SamplingParams(temperature=0., top_p=1., max_tokens=2048)
 
