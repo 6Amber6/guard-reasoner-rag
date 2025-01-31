@@ -24,7 +24,8 @@ As LLMs increasingly impact safety-critical applications, ensuring their safety 
 
 ## Update
 
-- (**2024/01/31**) The code of GuardReasoner is released.
+- (**2025/01/31**) The models are released (1B, 3B, [8B](https://huggingface.co/yueliu1999/GuardReasoner-8B)).
+- (**2025/01/31**) The code of GuardReasoner is released.
 - (**2025/01/31**) GuardReasoner is on [arXiv](https://arxiv.org/abs/2501.18492).
 
 
