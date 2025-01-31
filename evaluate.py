@@ -14,7 +14,7 @@ def cal_f1(folder="./data/8B/", dataset="ToxicChat", task="prompt", process_labe
     labels = []
     pred_labels = []
     if dataset=="WildGuardTest":
-        wild_guard_gt = pd.read_json('./data/test/wild_guard_test.json')
+        wild_guard_gt = pd.read_json('./data/benchmark/0_4_wild_guard_test.json')
 
     for i in range(len(pred)):
 
