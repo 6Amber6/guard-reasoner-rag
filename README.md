@@ -101,7 +101,7 @@ To reproduce the generation process of GuardReasoner, run the following code.
 
 To use GuardReasoner, run the following code.
 ```
-
+python deploy.py
 ```
 
 
