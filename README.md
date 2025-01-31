@@ -104,6 +104,14 @@ To reproduce the training process of GuardReasoner, run the following code.
 1. TODO
 
 
+## Acknowledgement
+Our method are partly based on the following resources. Thanks for their awesome works.
+- [LLaMA Factory](https://github.com/hiyouga/LLaMA-Factory)
+- [WildGuard](https://github.com/allenai/wildguard)
+- [Llama-3.2-1B](https://huggingface.co/meta-llama/Llama-3.2-1B)
+- [Llama-3.2-3B](https://huggingface.co/meta-llama/Llama-3.2-3B)
+- [Llama-3.1-8B](https://huggingface.co/meta-llama/Llama-3.1-8B)
+
 
 
 ## Citations
