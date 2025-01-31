@@ -1,7 +1,7 @@
 
 
 <div align="center">
-<h2><a href="">	
+<h2><a href="https://arxiv.org/abs/2501.18492">	
 GuardReasoner: Towards Reasoning-based LLM Safeguards</a></h2>
 </a></h2>
 </div>
@@ -24,7 +24,7 @@ As LLMs increasingly impact safety-critical applications, ensuring their safety 
 
 ## Update
 
-- (**2025/01/31**) The models are released (1B, 3B, [8B](https://huggingface.co/yueliu1999/GuardReasoner-8B)).
+- (**2025/01/31**) The models are released ([1B](https://huggingface.co/yueliu1999/GuardReasoner-1B), [3B](https://huggingface.co/yueliu1999/GuardReasoner-3B), [8B](https://huggingface.co/yueliu1999/GuardReasoner-8B)).
 - (**2025/01/31**) The code of GuardReasoner is released.
 - (**2025/01/31**) GuardReasoner is on [arXiv](https://arxiv.org/abs/2501.18492).
 
@@ -55,7 +55,7 @@ python ./evaluate.py
 Table 1: Performance on Prompt Harmfulness Detection Task.
 </p>
 <div align="center">
-    <img src=./assets/response.png width="70%">
+    <img src=./assets/prompt.png width="75%">
 </div>
 
 
@@ -90,22 +90,18 @@ Table 3: Performance on Refusal Detection Task.
 
 To reproduce the generation process of GuardReasoner, run the following code.
 
-1. Install the environment
+1. generate via vLLM
     ```
-    pip install -r requirements.txt
+    CUDA_VISIBLE_DEVICES=0 python generate.py
     ```
-2. generate via vLLM
-    ```
-    python generate.py
-    ```
-3. evaluate performance
+2. evaluate performance
     ```
     python evaluate.py
     ```
 
 To reproduce the training process of GuardReasoner, run the following code.
 
-TODO
+1. TODO
 
 
 

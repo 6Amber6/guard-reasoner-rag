@@ -6,7 +6,7 @@ from sklearn.metrics import f1_score
 folders = ["./data/test/1B/", "./data/test/3B/", "./data/test/8B/"]
 f1_list = []
 
-def cal_f1(folder="./data/8B/", dataset="ToxicChat", task="prompt", process_label=False):
+def cal_f1(folder="./data/test/8B/", dataset="ToxicChat", task="prompt", process_label=False):
 
     file_name = folder + dataset + "/generated_predictions.jsonl" 
     pred = pd.read_json(file_name, lines=True)
@@ -105,7 +105,7 @@ def reverse(gt_example):
         
 
 for folder in folders:
-    print("Performance of GuardReasoner ({}):".format(folder.split("/")[3]))
+    print("Performance of GuardReasoner ({}):".format(folder))
     
     print("-"*150)
     print("prompt harmfulness detection task".center(150))
