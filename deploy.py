@@ -1,5 +1,12 @@
+import re
 from template import INSTUCT
 from vllm import LLM, SamplingParams
+
+def post_process(text):
+    text = re.sub(r'task 1', r'task 1: prompt harmfulness detection', text, flags=re.IGNORECASE)
+    text = re.sub(r'task 2', r'task 2: refusal detection', text, flags=re.IGNORECASE)
+    text = re.sub(r'task 3', r'task 3: response harmfulness detection', text, flags=re.IGNORECASE)
+    return text
 
 def generate(vllm_model, prompt_list=[""], response_list=["None"]):
     
@@ -35,7 +42,6 @@ Mark
 """]
 
 
-outputs = generate(vllm_model, prompt_list, response_list)
+output = post_process(generate(vllm_model, prompt_list, response_list)[0].outputs[0].text)
 
-
-print(outputs)
+print(output)
