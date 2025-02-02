@@ -47,5 +47,73 @@ python reasoning_data_synthesis.py
 
 ### Step 3: Hard Sample DPO
 
-1. Hard sample mining
+1. Train reasoning models to improve the diversity of hard samples.
+    ```
+    R-SFT_1b_diversity.sh
+    R-SFT_3b_diversity.sh
+    R-SFT_8b_diversity.sh
+    ```
 
+2. Conduct n generations.
+    ```
+    python n_generate.py
+    ```
+
+3. Hard sample mining
+    ```
+    python hard_sample_mining.py
+    python merge_hard_sample.py
+    ```
+
+4. Move `WildGuard_hard_sample_*.json`, `Aegis_hard_sample_*.json`, `BeaverTails_hard_sample_*.json`, `ToxicChat_hard_sample_*.json` to data folder in LLaMA-Factory and configre `dataset_info.json` as follows. For example, 
+
+    ```
+    "WildGuardTrainHS_8B": {
+      "file_name": "WildGuard_hard_sample_guardreasoner_rsft_8b.json",
+      "ranking": true,
+      "columns": {
+        "prompt": "instruction",
+        "query": "input",
+        "chosen": "chosen",
+        "rejected": "rejected"
+      }
+    },
+
+    "AegisTrainHS_8B_merge": {
+      "file_name": "Aegis_hard_sample_guardreasoner_rsft_8b_merge.json",
+      "ranking": true,
+      "columns": {
+        "prompt": "instruction",
+        "query": "input",
+        "chosen": "chosen",
+        "rejected": "rejected"
+      }
+    },
+    "BeaverTailsTrainHS_8B_merge": {
+      "file_name": "BeaverTails_hard_sample_guardreasoner_rsft_8b_merge.json",
+      "ranking": true,
+      "columns": {
+        "prompt": "instruction",
+        "query": "input",
+        "chosen": "chosen",
+        "rejected": "rejected"
+      }
+    },
+    "ToxicChatTrainHS_8B_merge": {
+      "file_name": "ToxicChat_hard_sample_guardreasoner_rsft_8b_merge.json",
+      "ranking": true,
+      "columns": {
+        "prompt": "instruction",
+        "query": "input",
+        "chosen": "chosen",
+        "rejected": "rejected"
+      }
+    },
+    ```
+
+5. Conduct HS-DPO via LLaMA-Factory. You need to modify LLaMA-Factory and assign `sample_weight` in datasets for each sample during the DPO process. The scripts are provided. 
+    ```
+    bash HS-DPO_1b.sh
+    bash HS-DPO_3b.sh
+    bash HS-DPO_8b.sh
+    ```

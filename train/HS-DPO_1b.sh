@@ -1,22 +1,22 @@
 device="0,1,2,3"
-save_path="saves/Llama-3.2-3B/full/guardreasoner_rsft_3b"
+save_path="saves/Llama-3.2-1B/full/guardreasoner_hsdpo_1b"
 
 CUDA_VISIBLE_DEVICES=$device llamafactory-cli train \
-    --stage sft \
+    --stage dpo \
     --do_train True \
-    --model_name_or_path meta-llama/Llama-3.2-3B \
+    --model_name_or_path "saves/Llama-3.2-1B/full/guardreasoner_rsft_1b" \
     --preprocessing_num_workers 16 \
     --finetuning_type full \
     --template llama3 \
     --flash_attn auto \
     --dataset_dir data \
-    --dataset WildGuardTrainR,AegisTrainR,BeaverTailsTrainR,ToxicChatTrainR \
+    --dataset WildGuardTrainHS_1B,AegisTrainHS_1B_merge,BeaverTailsTrainHS_1B_merge,ToxicChatTrainHS_1B_merge \
     --cutoff_len 2048 \
-    --learning_rate 5e-05 \
-    --num_train_epochs 3.0 \
+    --learning_rate 5e-06 \
+    --num_train_epochs 2.0 \
     --max_samples 100000 \
-    --per_device_train_batch_size 6 \
-    --gradient_accumulation_steps 16 \
+    --per_device_train_batch_size 1 \
+    --gradient_accumulation_steps 64 \
     --lr_scheduler_type cosine \
     --max_grad_norm 1.0 \
     --logging_steps 5 \
@@ -30,4 +30,7 @@ CUDA_VISIBLE_DEVICES=$device llamafactory-cli train \
     --ddp_timeout 180000000 \
     --include_num_input_tokens_seen True \
     --optim adamw_torch \
-    --deepspeed cache/ds_z3_config.json 
+    --pref_beta 0.01 \
+    --pref_ftx 2.0 \
+    --pref_loss sigmoid \
+    --deepspeed cache/ds_z3_config.json

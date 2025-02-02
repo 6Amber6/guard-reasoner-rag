@@ -1,4 +1,4 @@
-device="1,2,3,4"
+device="0,1,2,3"
 save_path="saves/Llama-3.1-8B/full/guardreasoner_rsft_8b"
 
 CUDA_VISIBLE_DEVICES=$device llamafactory-cli train \
