@@ -10,7 +10,7 @@ CUDA_VISIBLE_DEVICES=$device llamafactory-cli train \
     --template llama3 \
     --flash_attn auto \
     --dataset_dir data \
-    --dataset 1_1_WildGuardTrainCot,1_2_AegisTrainCot,1_3_BeaverTailsTrainCot,1_4_ToxicChatTrainCot \
+    --dataset WildGuardTrainR,AegisTrainR,BeaverTailsTrainR,ToxicChatTrainR \
     --cutoff_len 2048 \
     --learning_rate 5e-05 \
     --num_train_epochs 3.0 \
