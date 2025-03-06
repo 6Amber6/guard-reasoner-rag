@@ -24,6 +24,7 @@ As LLMs increasingly impact safety-critical applications, ensuring their safety 
 
 ## Update
 
+- (**2025/03/06**) The paper has been accepted by the ICLR 2025 FM-Wild Workshop.
 - (**2025/02/02**) The [training pipeline](./train/README.md) is released.
 - (**2025/02/01**) The training data [GuardReasonerTrain](https://huggingface.co/datasets/yueliu1999/GuardReasonerTrain) is released.
 - (**2025/01/31**) The models are released ([1B](https://huggingface.co/yueliu1999/GuardReasoner-1B), [3B](https://huggingface.co/yueliu1999/GuardReasoner-3B), [8B](https://huggingface.co/yueliu1999/GuardReasoner-8B)).
