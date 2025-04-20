@@ -108,9 +108,7 @@ CUDA_VISIBLE_DEVICES=0 python deploy.py
 ```
 
 
-To reproduce the training process of GuardReasoner, run the following code.
-
-1. TODO
+To reproduce the training process of GuardReasoner, see [training pipeline](./train/README.md).
 
 
 ## Acknowledgement
