@@ -3,14 +3,13 @@
 <div align="center">
 <h2><a href="https://arxiv.org/abs/2501.18492">	
 GuardReasoner: Towards Reasoning-based LLM Safeguards</a></h2>
+    
+    [Yue Liu](https://yueliu1999.github.io/)
 
 </a></h2>
 </div>
 
 
-<div align="center">
-    [Yue Liu](https://yueliu1999.github.io/)
-</div>
     
 
 <p align = "justify">
