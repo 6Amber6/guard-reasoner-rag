@@ -9,8 +9,7 @@ GuardReasoner: Towards Reasoning-based LLM Safeguards</a></h2>
 
 
 <div align="center">
-[Yue Liu](https://yueliu1999.github.io/)
-
+    [Yue Liu](https://yueliu1999.github.io/)
 </div>
     
 
