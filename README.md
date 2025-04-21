@@ -6,7 +6,7 @@ GuardReasoner: Towards Reasoning-based LLM Safeguards</a></h2>
     
 
 </a></h2>
-[Yue Liu](https://yueliu1999.github.io/)
+[Yue Liu](https://yueliu1999.github.io/), Hongcheng Gao, Shengfang Zhai, Jun Xia, Tianyi Wu, Zhiwei Xue, Yulin Chen, Kenji Kawaguchi, Jiaheng Zhang, Bryan Hooi
 
 </div>
 
