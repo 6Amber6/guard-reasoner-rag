@@ -6,7 +6,7 @@ GuardReasoner: Towards Reasoning-based LLM Safeguards</a></h2>
     
 
 </a></h2>
-[Yue Liu](https://yueliu1999.github.io/), [Hongcheng Gao](https://hongcheng-gao.github.io/), [Shengfang Zhai](https://zhaisf.github.io/), [Jun Xia](https://junxia97.github.io/), [Tianyi Wu](), [Zhiwei Xue](), [Yulin Chen](https://sg.linkedin.com/in/yulin-chen-00a99828b), \\ [Kenji Kawaguchi](https://www.comp.nus.edu.sg/cs/people/kenji/), [Jiaheng Zhang](https://zjhzjh123.github.io/), [Bryan Hooi](https://bhooi.github.io/)
+[Yue Liu](https://yueliu1999.github.io/), [Hongcheng Gao](https://hongcheng-gao.github.io/), [Shengfang Zhai](https://zhaisf.github.io/), [Jun Xia](https://junxia97.github.io/), [Tianyi Wu](), [Zhiwei Xue](), [Yulin Chen](https://sg.linkedin.com/in/yulin-chen-00a99828b), <br> [Kenji Kawaguchi](https://www.comp.nus.edu.sg/cs/people/kenji/), [Jiaheng Zhang](https://zjhzjh123.github.io/), [Bryan Hooi](https://bhooi.github.io/)
 
 </div>
 
