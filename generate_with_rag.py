@@ -81,7 +81,7 @@ class RAGRetriever:
         return "\n".join(context_parts)
 
 
-def generate_with_rag(model_path, output_dir="./data/test/1B/WildGuardTest_RAG", 
+def generate_with_rag(model_path, output_dir="./data/test/1B/WildGuardTest_HSDPO_WithRAG", 
                       use_rag=True, top_k=3):
     """
     使用RAG增强生成预测结果
@@ -170,7 +170,7 @@ if __name__ == "__main__":
                        default="saves/Llama-3.2-1B/full/guardreasoner_hsdpo_1b",
                        help="Path to the trained model")
     parser.add_argument("--output_dir", type=str,
-                       default="./data/test/1B/WildGuardTest_RAG",
+                       default="./data/test/1B/WildGuardTest_HSDPO_WithRAG",
                        help="Output directory for predictions")
     parser.add_argument("--use_rag", action="store_true", default=True,
                        help="Whether to use RAG")
