@@ -13,15 +13,15 @@ class RAGRetriever:
     
     def __init__(self, knowledge_base_path="./rag_knowledge_base/knowledge_base.pkl", 
                  encoder_path="./rag_knowledge_base/encoder",
-                 top_k=2, similarity_threshold=0.5):
+                 top_k=1, similarity_threshold=0.7):
         """
         初始化RAG检索器
         
         Args:
             knowledge_base_path: 知识库路径
             encoder_path: encoder路径
-            top_k: 检索top-k个最相关的知识项（默认2，减少干扰）
-            similarity_threshold: 相似度阈值，低于此值的案例会被过滤（默认0.5）
+            top_k: 检索top-k个最相关的知识项（默认1，减少干扰）
+            similarity_threshold: 相似度阈值，低于此值的案例会被过滤（默认0.7）
         """
         print("Loading RAG knowledge base...")
         with open(knowledge_base_path, 'rb') as f:
@@ -118,7 +118,7 @@ class RAGRetriever:
 
 
 def generate_with_rag(model_path, output_dir="./data/test/1B/WildGuardTest_HSDPO_WithRAG", 
-                      use_rag=True, top_k=2, similarity_threshold=0.5):
+                      use_rag=True, top_k=1, similarity_threshold=0.7):
     """
     使用RAG增强生成预测结果
     
@@ -219,10 +219,10 @@ if __name__ == "__main__":
                        help="Whether to use RAG")
     parser.add_argument("--no_rag", action="store_false", dest="use_rag",
                        help="Disable RAG")
-    parser.add_argument("--top_k", type=int, default=2,
-                       help="Number of retrieved examples for RAG (default: 2)")
-    parser.add_argument("--similarity_threshold", type=float, default=0.5,
-                       help="Similarity threshold for filtering low-quality examples (default: 0.5)")
+    parser.add_argument("--top_k", type=int, default=1,
+                       help="Number of retrieved examples for RAG (default: 1)")
+    parser.add_argument("--similarity_threshold", type=float, default=0.7,
+                       help="Similarity threshold for filtering low-quality examples (default: 0.7)")
     
     args = parser.parse_args()
     
