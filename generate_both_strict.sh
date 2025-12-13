@@ -26,7 +26,7 @@ echo ""
 
 # 生成模型1的预测
 echo ">>> Generating predictions for Model 1 (R-SFT) with strict format..."
-python generate_strict_format.py \
+python generate_strict_format_transformers.py \
     --model_path "$MODEL1_HF_PATH" \
     --output_dir "$MODEL1_OUTPUT_DIR" \
     --model_name "R-SFT Model (Strict Format)"
@@ -37,7 +37,7 @@ echo ""
 
 # 生成模型2的预测
 echo ">>> Generating predictions for Model 2 (HS-DPO) with strict format..."
-python generate_strict_format.py \
+python generate_strict_format_transformers.py \
     --model_path "$MODEL2_HF_PATH" \
     --output_dir "$MODEL2_OUTPUT_DIR" \
     --model_name "HS-DPO Model (Strict Format)"
