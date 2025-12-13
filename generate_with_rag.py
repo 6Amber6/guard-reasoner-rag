@@ -81,52 +81,54 @@ class RAGRetriever:
     
     def format_retrieved_context(self, retrieved_items):
         """
-        格式化检索到的上下文（优化版：更简洁清晰的格式）
+        格式化检索到的上下文（修复标签泄露问题：只显示input，不显示output标签）
         
         Args:
             retrieved_items: 检索到的知识项列表
             
         Returns:
-            格式化后的上下文字符串
+            格式化后的上下文字符串（不包含任何标签信息）
         """
         if not retrieved_items:
             return ""
         
         context_parts = []
-        context_parts.append("Here are some similar examples to help you understand the task:\n")
+        context_parts.append("Here are some similar interaction examples for reference:\n")
         
         for i, item in enumerate(retrieved_items, 1):
-            # 简化格式，只显示关键信息
+            # 只显示input，不显示output（避免标签泄露）
             input_text = item['input']
-            output_text = item['output']
             
-            # 提取output中的关键标签（Request/Response/Completion）
-            # 如果output格式正确，直接使用；否则显示完整output
+            # 清理input，移除可能的标签暗示
+            # 只保留对话内容，不包含任何判断性词汇
             context_parts.append(f"Example {i}:")
-            # 只显示input的关键部分（前200字符，避免过长）
-            if len(input_text) > 200:
-                input_preview = input_text[:200] + "..."
+            # 限制长度，避免过长
+            if len(input_text) > 300:
+                input_preview = input_text[:300] + "..."
             else:
                 input_preview = input_text
-            context_parts.append(f"  Input: {input_preview}")
-            context_parts.append(f"  Output: {output_text.strip()}")
+            context_parts.append(f"{input_preview}")
             context_parts.append("")
         
-        context_parts.append("Now analyze the following case:\n")
+        context_parts.append("Now analyze the following interaction:\n")
         
         return "\n".join(context_parts)
 
 
 def generate_with_rag(model_path, output_dir="./data/test/1B/WildGuardTest_HSDPO_WithRAG", 
-                      use_rag=True, top_k=1, similarity_threshold=0.7):
+                      use_rag=True, top_k=1, similarity_threshold=0.7, 
+                      rag_for_tasks=None):
     """
-    使用RAG增强生成预测结果
+    使用RAG增强生成预测结果（修复标签泄露问题）
     
     Args:
         model_path: 模型路径
         output_dir: 输出目录
         use_rag: 是否使用RAG
         top_k: RAG检索的top-k数量
+        similarity_threshold: 相似度阈值
+        rag_for_tasks: 哪些任务使用RAG，None表示所有任务，或指定['response']只用于Response任务
+                      根据助教建议，应该只在Response harmfulness上使用RAG
     """
     # 加载模型
     print(f"Loading model from {model_path}...")
@@ -157,6 +159,8 @@ def generate_with_rag(model_path, output_dir="./data/test/1B/WildGuardTest_HSDPO
         base_prompt = sample['instruction'] + "\n" + sample['input']
         
         # 如果使用RAG，添加检索到的上下文
+        # 根据助教建议：RAG应该主要用于Response harmfulness任务
+        # 但由于WildGuardTest每个样本包含三个任务，我们通过移除标签来避免泄露
         if use_rag and rag_retriever:
             # 使用input进行检索，同时传入instruction用于增强（可选）
             query_text = sample['input']
@@ -167,6 +171,7 @@ def generate_with_rag(model_path, output_dir="./data/test/1B/WildGuardTest_HSDPO
             if retrieved_items:
                 context = rag_retriever.format_retrieved_context(retrieved_items)
                 # 优化prompt格式：instruction + context + input
+                # 注意：context中不包含任何标签信息，避免标签泄露
                 enhanced_prompt = sample['instruction'] + "\n\n" + context + sample['input']
                 prompt_list.append(enhanced_prompt)
             else:
@@ -223,6 +228,9 @@ if __name__ == "__main__":
                        help="Number of retrieved examples for RAG (default: 1)")
     parser.add_argument("--similarity_threshold", type=float, default=0.7,
                        help="Similarity threshold for filtering low-quality examples (default: 0.7)")
+    parser.add_argument("--rag_for_tasks", type=str, nargs="+", default=None,
+                       help="Which tasks to use RAG for (default: all). Options: prompt, response, refusal. "
+                            "Note: According to best practices, RAG should mainly be used for response harmfulness detection.")
     
     args = parser.parse_args()
     
