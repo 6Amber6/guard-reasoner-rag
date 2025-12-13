@@ -9,18 +9,19 @@ from vllm import LLM, SamplingParams
 from sentence_transformers import SentenceTransformer
 
 class RAGRetriever:
-    """RAG检索器"""
+    """RAG检索器（优化版）"""
     
     def __init__(self, knowledge_base_path="./rag_knowledge_base/knowledge_base.pkl", 
                  encoder_path="./rag_knowledge_base/encoder",
-                 top_k=3):
+                 top_k=2, similarity_threshold=0.5):
         """
         初始化RAG检索器
         
         Args:
             knowledge_base_path: 知识库路径
             encoder_path: encoder路径
-            top_k: 检索top-k个最相关的知识项
+            top_k: 检索top-k个最相关的知识项（默认2，减少干扰）
+            similarity_threshold: 相似度阈值，低于此值的案例会被过滤（默认0.5）
         """
         print("Loading RAG knowledge base...")
         with open(knowledge_base_path, 'rb') as f:
@@ -28,20 +29,31 @@ class RAGRetriever:
         
         self.encoder = SentenceTransformer(encoder_path)
         self.top_k = top_k
+        self.similarity_threshold = similarity_threshold
         print(f"RAG knowledge base loaded with {len(self.knowledge_base['items'])} items")
+        print(f"Using top_k={top_k}, similarity_threshold={similarity_threshold}")
     
-    def retrieve(self, query_text):
+    def retrieve(self, query_text, instruction_text=""):
         """
-        检索最相关的知识项
+        检索最相关的知识项（优化版：添加相似度阈值和instruction增强）
         
         Args:
-            query_text: 查询文本
+            query_text: 查询文本（input）
+            instruction_text: instruction文本（可选，用于增强检索）
             
         Returns:
-            检索到的知识项列表
+            检索到的知识项列表（已过滤低质量案例）
         """
+        # 使用input进行检索（如果instruction不为空，可以拼接增强）
+        if instruction_text:
+            # 只使用instruction的关键部分，避免过长
+            instruction_key = "analyzing interactions between humans and AI"
+            enhanced_query = f"{instruction_key}\n{query_text}"
+        else:
+            enhanced_query = query_text
+        
         # 对查询文本进行编码
-        query_embedding = self.encoder.encode([query_text])[0]
+        query_embedding = self.encoder.encode([enhanced_query])[0]
         
         # 计算相似度
         embeddings = self.knowledge_base['embeddings']
@@ -49,18 +61,27 @@ class RAGRetriever:
             np.linalg.norm(embeddings, axis=1) * np.linalg.norm(query_embedding)
         )
         
-        # 获取top-k
-        top_indices = np.argsort(similarities)[-self.top_k:][::-1]
+        # 获取top-k，并过滤低相似度案例
+        top_indices = np.argsort(similarities)[-self.top_k * 2:][::-1]  # 多取一些候选
         
         retrieved_items = []
         for idx in top_indices:
-            retrieved_items.append(self.knowledge_base['items'][idx])
+            similarity = similarities[idx]
+            # 只保留相似度高于阈值的案例
+            if similarity >= self.similarity_threshold:
+                retrieved_items.append({
+                    'item': self.knowledge_base['items'][idx],
+                    'similarity': similarity
+                })
+                if len(retrieved_items) >= self.top_k:
+                    break
         
-        return retrieved_items
+        # 返回知识项（不包含相似度分数）
+        return [item['item'] for item in retrieved_items]
     
     def format_retrieved_context(self, retrieved_items):
         """
-        格式化检索到的上下文
+        格式化检索到的上下文（优化版：更简洁清晰的格式）
         
         Args:
             retrieved_items: 检索到的知识项列表
@@ -68,21 +89,36 @@ class RAGRetriever:
         Returns:
             格式化后的上下文字符串
         """
+        if not retrieved_items:
+            return ""
+        
         context_parts = []
-        context_parts.append("## Relevant Examples for Reference:\n")
+        context_parts.append("Here are some similar examples to help you understand the task:\n")
         
         for i, item in enumerate(retrieved_items, 1):
-            context_parts.append(f"### Example {i}:")
-            context_parts.append(f"Input: {item['input']}")
-            if item['reasoning']:
-                context_parts.append(f"Reasoning: {item['reasoning'][:500]}...")  # 限制长度
+            # 简化格式，只显示关键信息
+            input_text = item['input']
+            output_text = item['output']
+            
+            # 提取output中的关键标签（Request/Response/Completion）
+            # 如果output格式正确，直接使用；否则显示完整output
+            context_parts.append(f"Example {i}:")
+            # 只显示input的关键部分（前200字符，避免过长）
+            if len(input_text) > 200:
+                input_preview = input_text[:200] + "..."
+            else:
+                input_preview = input_text
+            context_parts.append(f"  Input: {input_preview}")
+            context_parts.append(f"  Output: {output_text.strip()}")
             context_parts.append("")
+        
+        context_parts.append("Now analyze the following case:\n")
         
         return "\n".join(context_parts)
 
 
 def generate_with_rag(model_path, output_dir="./data/test/1B/WildGuardTest_HSDPO_WithRAG", 
-                      use_rag=True, top_k=3):
+                      use_rag=True, top_k=2, similarity_threshold=0.5):
     """
     使用RAG增强生成预测结果
     
@@ -102,7 +138,7 @@ def generate_with_rag(model_path, output_dir="./data/test/1B/WildGuardTest_HSDPO
     rag_retriever = None
     if use_rag:
         try:
-            rag_retriever = RAGRetriever(top_k=top_k)
+            rag_retriever = RAGRetriever(top_k=top_k, similarity_threshold=similarity_threshold)
         except Exception as e:
             print(f"Warning: Failed to load RAG retriever: {e}")
             print("Continuing without RAG...")
@@ -122,14 +158,20 @@ def generate_with_rag(model_path, output_dir="./data/test/1B/WildGuardTest_HSDPO
         
         # 如果使用RAG，添加检索到的上下文
         if use_rag and rag_retriever:
-            # 从input中提取查询文本（用户请求和AI回复）
+            # 使用input进行检索，同时传入instruction用于增强（可选）
             query_text = sample['input']
-            retrieved_items = rag_retriever.retrieve(query_text)
-            context = rag_retriever.format_retrieved_context(retrieved_items)
+            instruction_text = sample['instruction']
+            retrieved_items = rag_retriever.retrieve(query_text, instruction_text)
             
-            # 将上下文添加到prompt中
-            enhanced_prompt = sample['instruction'] + "\n\n" + context + "\n" + sample['input']
-            prompt_list.append(enhanced_prompt)
+            # 如果检索到有效案例，添加上下文；否则不使用RAG
+            if retrieved_items:
+                context = rag_retriever.format_retrieved_context(retrieved_items)
+                # 优化prompt格式：instruction + context + input
+                enhanced_prompt = sample['instruction'] + "\n\n" + context + sample['input']
+                prompt_list.append(enhanced_prompt)
+            else:
+                # 如果没有检索到相似案例，回退到不使用RAG
+                prompt_list.append(base_prompt)
         else:
             prompt_list.append(base_prompt)
     
@@ -177,8 +219,10 @@ if __name__ == "__main__":
                        help="Whether to use RAG")
     parser.add_argument("--no_rag", action="store_false", dest="use_rag",
                        help="Disable RAG")
-    parser.add_argument("--top_k", type=int, default=3,
-                       help="Number of retrieved examples for RAG")
+    parser.add_argument("--top_k", type=int, default=2,
+                       help="Number of retrieved examples for RAG (default: 2)")
+    parser.add_argument("--similarity_threshold", type=float, default=0.5,
+                       help="Similarity threshold for filtering low-quality examples (default: 0.5)")
     
     args = parser.parse_args()
     
@@ -207,6 +251,7 @@ if __name__ == "__main__":
         model_path=args.model_path,
         output_dir=args.output_dir,
         use_rag=args.use_rag,
-        top_k=args.top_k
+        top_k=args.top_k,
+        similarity_threshold=args.similarity_threshold
     )
 

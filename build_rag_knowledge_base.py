@@ -1,5 +1,5 @@
 """
-构建RAG知识库：从训练数据中提取推理步骤作为知识库
+构建RAG知识库
 """
 import json
 import os
@@ -34,30 +34,25 @@ def build_knowledge_base(train_data_paths, output_dir="./rag_knowledge_base"):
             data = json.load(f)
         
         for item in data:
-            # 提取input和output中的推理步骤
+            # 只提取input和output
             input_text = item.get('input', '')
             output_text = item.get('output', '')
-            
-            # 提取推理步骤（从output中提取）
-            reasoning_steps = extract_reasoning_steps(output_text)
             
             # 创建知识项
             knowledge_item = {
                 'input': input_text,
-                'reasoning': reasoning_steps,
                 'output': output_text
             }
             knowledge_items.append(knowledge_item)
     
     print(f"Total knowledge items: {len(knowledge_items)}")
     
-    # 为每个知识项生成embedding
+    # 为每个知识项生成embedding（只使用input）
     print("Generating embeddings...")
     texts_to_encode = []
     for item in knowledge_items:
-        # 使用input和reasoning的组合作为检索文本
-        text = f"{item['input']}\n{item['reasoning']}"
-        texts_to_encode.append(text)
+        # 只使用input作为检索文本
+        texts_to_encode.append(item['input'])
     
     embeddings = encoder.encode(texts_to_encode, show_progress_bar=True, batch_size=32)
     
@@ -76,27 +71,6 @@ def build_knowledge_base(train_data_paths, output_dir="./rag_knowledge_base"):
     
     print(f"Knowledge base saved to {output_dir}")
     return knowledge_base, encoder
-
-
-def extract_reasoning_steps(output_text):
-    """
-    从output中提取推理步骤
-    """
-    # 提取所有以"## Reasoning Step"开头的步骤
-    reasoning_lines = []
-    lines = output_text.split('\n')
-    in_reasoning = False
-    
-    for line in lines:
-        if '## Reasoning Step' in line or '# Task' in line:
-            in_reasoning = True
-            reasoning_lines.append(line)
-        elif in_reasoning and line.strip() and not line.startswith('Answers:'):
-            reasoning_lines.append(line)
-        elif line.startswith('Answers:'):
-            break
-    
-    return '\n'.join(reasoning_lines)
 
 
 if __name__ == "__main__":

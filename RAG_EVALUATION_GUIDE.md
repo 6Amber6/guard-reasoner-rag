@@ -194,17 +194,6 @@ Skipped          5               3               -2
 - `gpu_memory_utilization=0.7` (默认0.95，已降低)
 - `max_num_seqs=128` (默认256，已降低)
 
-如果仍然遇到内存不足，可以进一步调整：
-
-在 `generate_with_rag.py` 或 `generate_wildguard.py` 中：
-```python
-vllm_model = LLM(
-    model=model_path, 
-    gpu_memory_utilization=0.6,  # 进一步降低GPU内存使用率
-    max_num_seqs=64               # 进一步降低批处理大小
-)
-```
-
 **注意**：降低这些参数可能会稍微降低生成速度，但可以避免内存不足的错误。
 
 ### Q3: RAG没有提升效果怎么办？
@@ -278,7 +267,7 @@ GuardReasoner/
 
 ---
 
-## 🎉 完成！
+## 完成！
 
 现在你已经完成了RAG的集成和评估。如果RAG提升了模型效果，恭喜你！如果效果不理想，可以尝试：
 
@@ -287,5 +276,5 @@ GuardReasoner/
 3. 尝试不同的embedding模型
 4. 调整RAG上下文的格式
 
-祝你实验顺利！🚀
+
 
