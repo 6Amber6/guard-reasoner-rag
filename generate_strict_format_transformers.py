@@ -60,6 +60,7 @@ def generate_with_strict_format(model_path, output_dir, model_name=None):
     try:
         tokenizer = AutoTokenizer.from_pretrained(
             model_path,
+            padding_side="left",  # 对于decoder-only架构，使用left padding
             trust_remote_code=True
         )
         
