@@ -50,9 +50,20 @@ def extract_label(text, task):
         return None
     
     # 策略1: 优先在"Answers:"部分查找（最可靠）
+    # 处理重复输出的情况：如果有多个"Answers:"，使用第一个完整的
     if "answers:" in text_lower:
-        answers_idx = text_lower.find("answers:")
-        answers_section = text_lower[answers_idx:answers_idx+300]  # 取Answers部分
+        # 找到第一个"Answers:"的位置
+        first_answers_idx = text_lower.find("answers:")
+        # 查找第一个完整答案的结束位置（避免重复输出）
+        # 检查是否有第二个"Answers:"（说明有重复）
+        second_answers_idx = text_lower.find("answers:", first_answers_idx + 10)
+        
+        if second_answers_idx != -1:
+            # 有重复，只使用第一个Answers部分
+            answers_section = text_lower[first_answers_idx:second_answers_idx]
+        else:
+            # 没有重复，使用第一个Answers及其后300字符
+            answers_section = text_lower[first_answers_idx:first_answers_idx+300]
         
         for pattern in patterns:
             match = re.search(pattern, answers_section, re.IGNORECASE)
@@ -108,9 +119,10 @@ def generate_predictions_vllm(model_path, output_folder):
     print(f" Generating with model: {model_path}")
     print(f"======================\n")
 
-    # Load model
-    llm = LLM(model=model_path, gpu_memory_utilization=0.95)
-    params = SamplingParams(temperature=0.0, top_p=1.0, max_tokens=2048)
+    # Load model（与原作者的generate.py完全一致）
+    llm = LLM(model=model_path, gpu_memory_utilization=0.95, max_num_seqs=256)
+    # 与原作者的generate.py完全一致：temperature=0., top_p=1., max_tokens=2048
+    params = SamplingParams(temperature=0., top_p=1., max_tokens=2048)
 
     # Load dataset
     with open("./data/benchmark/0_4_wild_guard_test.json") as f:
@@ -131,6 +143,31 @@ def generate_predictions_vllm(model_path, output_folder):
 
     for i, out in enumerate(outputs):
         generated = out.outputs[0].text
+        
+        # 后处理：处理重复输出和格式问题
+        # 1. 如果输出过长（>3000字符），可能是重复输出，提取第一个完整答案
+        if len(generated) > 3000:
+            # 查找第一个"Answers:"部分
+            if "Answers:" in generated:
+                answers_idx = generated.find("Answers:")
+                # 查找第一个完整答案的结束位置（下一个Answers:或明显的分隔符）
+                next_answers = generated.find("\n\nAnswers:", answers_idx + 50)
+                next_task = generated.find("\n\n# Task", answers_idx + 50)
+                next_sep = generated.find("\n---\n", answers_idx + 50)
+                
+                # 找到最近的结束位置
+                end_positions = [pos for pos in [next_answers, next_task, next_sep] if pos != -1]
+                if end_positions:
+                    end_pos = min(end_positions)
+                    generated = generated[:end_pos]
+                else:
+                    # 如果没有找到明显的结束标记，取第一个Answers后300字符
+                    generated = generated[:answers_idx + 300]
+        
+        # 2. 如果输出太短（<50字符），可能是格式错误，记录警告
+        if len(generated) < 50:
+            print(f"  ⚠️  Warning: Sample {i+1} has very short output ({len(generated)} chars): {generated[:100]}")
+        
         save_list.append({
             "prompt": prompts[i],
             "label": gt_data[i]["output"],
