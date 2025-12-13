@@ -119,8 +119,8 @@ def generate_predictions_vllm(model_path, output_folder):
     print(f" Generating with model: {model_path}")
     print(f"======================\n")
 
-    # Load model（与原作者的generate.py完全一致）
-    llm = LLM(model=model_path, gpu_memory_utilization=0.95, max_num_seqs=256)
+    # Load model（降低GPU内存利用率以避免内存不足错误）
+    llm = LLM(model=model_path, gpu_memory_utilization=0.7, max_num_seqs=128)
     # 与原作者的generate.py完全一致：temperature=0., top_p=1., max_tokens=2048
     params = SamplingParams(temperature=0., top_p=1., max_tokens=2048)
 

@@ -190,16 +190,22 @@ Skipped          5               3               -2
 
 ### Q2: 生成预测时内存不足？
 
-**A**: 可以调整以下参数：
+**A**: 代码已经默认使用较低的内存占用设置：
+- `gpu_memory_utilization=0.7` (默认0.95，已降低)
+- `max_num_seqs=128` (默认256，已降低)
 
-在 `generate_with_rag.py` 中：
+如果仍然遇到内存不足，可以进一步调整：
+
+在 `generate_with_rag.py` 或 `generate_wildguard.py` 中：
 ```python
 vllm_model = LLM(
     model=model_path, 
-    gpu_memory_utilization=0.8,  # 降低GPU内存使用率（默认0.95）
-    max_num_seqs=128              # 降低批处理大小（默认256）
+    gpu_memory_utilization=0.6,  # 进一步降低GPU内存使用率
+    max_num_seqs=64               # 进一步降低批处理大小
 )
 ```
+
+**注意**：降低这些参数可能会稍微降低生成速度，但可以避免内存不足的错误。
 
 ### Q3: RAG没有提升效果怎么办？
 

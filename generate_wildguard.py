@@ -16,7 +16,8 @@ def generate_wildguard(model_path, output_dir="./data/test/1B/WildGuardTest"):
     """
     # 加载模型
     print(f"Loading model from {model_path}...")
-    vllm_model = LLM(model=model_path, gpu_memory_utilization=0.95, max_num_seqs=256)
+    # 降低GPU内存利用率以避免内存不足错误
+    vllm_model = LLM(model=model_path, gpu_memory_utilization=0.7, max_num_seqs=128)
     sampling_params = SamplingParams(temperature=0., top_p=1., max_tokens=2048)
     
     # 加载测试数据
