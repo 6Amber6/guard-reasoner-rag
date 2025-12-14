@@ -1,22 +1,22 @@
 #!/bin/bash
 
-# RAG评估快速开始脚本
-# 使用方法: bash quick_start_rag.sh
+# Quick start script for RAG evaluation
+# Usage: bash quick_start_rag.sh
 
 echo "=========================================="
-echo "RAG评估快速开始"
+echo "Quick Start: RAG Evaluation"
 echo "=========================================="
 echo ""
-echo "这个脚本将自动完成以下步骤："
-echo "1. 检查依赖"
-echo "2. 构建RAG知识库"
-echo "3. 生成不带RAG的预测（HSDPO模型）"
-echo "4. 生成带RAG的预测（HSDPO模型）"
-echo "5. 评估并对比结果"
+echo "This script will automatically complete the following steps:"
+echo "1. Check dependencies"
+echo "2. Build RAG knowledge base"
+echo "3. Generate predictions without RAG (HSDPO model)"
+echo "4. Generate predictions with RAG (HSDPO model)"
+echo "5. Evaluate and compare results"
 echo ""
-echo "预计时间：10-30分钟（取决于GPU和网络速度）"
+echo "Estimated time: 10-30 minutes (depending on GPU and network speed)"
 echo ""
-read -p "按Enter键开始，或Ctrl+C取消..."
+read -p "Press Enter to start, or Ctrl+C to cancel..."
 
 python run_rag_evaluation.py
 
