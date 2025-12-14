@@ -155,8 +155,8 @@ def generate_with_rag():
             model_path=HSDPO_MODEL_PATH,
             output_dir=OUTPUT_DIR_WITH_RAG,
             use_rag=True,
-            top_k=1,  # 默认：只使用1个最相似的案例，减少干扰
-            similarity_threshold=0.7  # 默认：相似度阈值0.7，过滤低质量案例
+            top_k=2,  # 优化：使用2个案例，提供更多参考
+            similarity_threshold=0.5  # 优化：降低阈值到0.5，获取更多有用案例
         )
         
         if os.path.exists(output_file):
