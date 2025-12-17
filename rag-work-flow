@@ -1,0 +1,8 @@
+flowchart TD
+    A[Load Data & Model]
+    B[Retrieve Similar Cases (RAG)]
+    C[Build Prompt with RAG Context]
+    D[Generate Output]
+    E[Evaluate Results]
+
+    A --> B --> C --> D --> E
