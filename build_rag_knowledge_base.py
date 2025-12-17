@@ -31,9 +31,24 @@ def build_knowledge_base(train_data_paths, output_dir="./rag_knowledge_base"):
             
         print(f"Processing {data_path}...")
         with open(data_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+            # Try to load as JSON first, if fails, try JSONL format
+            try:
+                data = json.load(f)
+                # If it's a list, use it directly
+                if isinstance(data, list):
+                    items = data
+                else:
+                    items = [data]
+            except json.JSONDecodeError:
+                # If JSON parsing fails, try JSONL format (one JSON object per line)
+                f.seek(0)
+                items = []
+                for line in f:
+                    line = line.strip()
+                    if line:
+                        items.append(json.loads(line))
         
-        for item in data:
+        for item in items:
             # 只提取input和output
             input_text = item.get('input', '')
             output_text = item.get('output', '')
