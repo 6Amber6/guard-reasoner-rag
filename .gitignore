@@ -1,0 +1,45 @@
+# RAG Knowledge Base
+rag_knowledge_base/
+*.pkl
+
+# Training Data
+data/*TrainR.json
+data/WildGuardTrainR.json
+data/AegisTrainR.json
+data/BeaverTailsTrainR.json
+data/ToxicChatTrainR.json
+
+# Model files
+*.safetensors
+*.bin
+*.pt
+*.pth
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Test outputs
+data/test/**/generated_predictions.jsonl
